@@ -9,8 +9,8 @@ namespace NeuralNetworkLibrary
 {
     public class Perceptron
     {
-        public double[] Weights;
-        public double Bias;
+        public double[] Weights { get; private set; }
+        public double Bias { get; private set; }
         private double weightMutationAmount;
         private double biasMutationAmount;
         private Random random;
@@ -95,6 +95,21 @@ namespace NeuralNetworkLibrary
             }
 
             return currentError;
+        }
+
+        private double CalculatePartiaDerivative()
+        {
+
+        }
+
+        public double TrainWithGradientDescent(double[] inputs, double desiredOutputs)
+        {
+
+        }
+
+        public double TrainWithGradientDescent(double[][] inputs, double desiredOutputs)
+        {
+
         }
     }
 }
