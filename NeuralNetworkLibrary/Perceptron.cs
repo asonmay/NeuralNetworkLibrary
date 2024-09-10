@@ -57,7 +57,7 @@ namespace NeuralNetworkLibrary
             double sum = 0;
             for (int i = 0; i < inputs.Length; i++) sum += inputs[i] * weight[i];
 
-            return sum + bias;
+            return activationFunction.Function(sum + bias);
         }
 
         public double[] Compute(double[][] inputs, double[] weights, double bias)
