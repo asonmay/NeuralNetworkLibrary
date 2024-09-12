@@ -98,21 +98,15 @@ namespace NeuralNetworkLibrary
 
             return currentError;
         }
+        
+        //Gradient Descent
 
-        private double CalculateWeightPartiaDerivative(int index, double[] inputs, double desiredOutputs)
+        private double CalculatePartialDerivitive(double[] inputs, double desiredOutputs)
         {
             double sum = 0;
             for (int i = 0; i < inputs.Length; i++) sum += inputs[i] * Weights[i];
-
-            return errorFunc.Derivative(Compute(inputs, Weights, Bias), desiredOutputs) + activationFunction.Derivative(sum + Bias) + inputs[index];
-        }
-
-        private double CalculateBiasPartialDerivitive(double[] inputs, double desiredOutputs)
-        {
-            double sum = 0;
-            for (int i = 0; i < inputs.Length; i++) sum += inputs[i] * Weights[i];
-
-            return errorFunc.Derivative(Compute(inputs, Weights, Bias), desiredOutputs) + activationFunction.Derivative(sum + Bias);
+             
+            return errorFunc.Derivative(Compute(inputs, Weights, Bias), desiredOutputs) * activationFunction.Derivative(sum + Bias);
         }
 
         private (double[], double) GetMutateValues(double[] inputs, double desiredOutput)
@@ -120,30 +114,31 @@ namespace NeuralNetworkLibrary
             double[] WeightValues = new double[Weights.Length];
             double BiasValue;
 
+            double partialDerivitive = CalculatePartialDerivitive(inputs, desiredOutput);
             for (int i = 0; i < Weights.Length; i++)
             {
-                WeightValues[i] = weightMutationAmount * -CalculateWeightPartiaDerivative(i, inputs, desiredOutput);
+                WeightValues[i] = weightMutationAmount * -partialDerivitive * inputs[i];
             }
-            BiasValue = biasMutationAmount * -CalculateBiasPartialDerivitive(inputs, desiredOutput);
+            BiasValue = biasMutationAmount * -partialDerivitive;
 
             return (WeightValues, BiasValue);
         }
 
         private (double[], double) GetBachMutateValues(double[][] inputs, double[] desiredOutputs)
         {
-            (double[], double)[] mutateValues = new (double[], double)[inputs.GetLength(1)];
-            for (int i = 0; i < inputs.GetLength(1); i++)
+            (double[], double)[] mutateValues = new (double[], double)[inputs.Length];
+            for (int i = 0; i < inputs.Length; i++)
             {
                 mutateValues[i] = GetMutateValues(inputs[i], desiredOutputs[i]);
             }
             double[] weightMutateValues = new double[Weights.Length];
             double biasMutateValue = 0;
 
-            for (int i = 0; i < inputs.GetLength(1); i++)
+            for (int i = 0; i < inputs[0].Length; i++)
             {
-                for (int j = 0; j < inputs.GetLength(0); j++)
+                for (int j = 0; j < inputs.Length; j++)
                 {
-                    weightMutateValues[i] += mutateValues[i].Item1[j];
+                    weightMutateValues[i] += mutateValues[j].Item1[i];
                 }
                 biasMutateValue += mutateValues[i].Item2;
             }
@@ -166,21 +161,15 @@ namespace NeuralNetworkLibrary
             return (newWeights, newBias);
         }
 
-        public double TrainWithGradientDescent(double[][] inputs, double[] desiredOutputs, double currentError)
+        public void TrainWithGradientDescent(double[][] inputs, double[] desiredOutputs)
         {
             (double[], double) mutationAmounts = GetBachMutateValues(inputs, desiredOutputs);
             (double[], double) mutated = Mutate(mutationAmounts.Item1, mutationAmounts.Item2);
 
             double mutatedError = GetError(inputs, desiredOutputs, mutated.Item1, mutated.Item2);
 
-            if (mutatedError < currentError || currentError == 0)
-            {
-                Weights = mutated.Item1;
-                Bias = mutated.Item2;
-                return mutatedError;
-            }
-
-            return currentError;
+            Weights = mutated.Item1;
+            Bias = mutated.Item2;
         }
     }
 }
