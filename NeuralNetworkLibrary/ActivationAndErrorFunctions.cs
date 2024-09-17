@@ -8,9 +8,9 @@ namespace NeuralNetworkLibrary
 {
     public static class ActivationAndErrorFunctions
     {
-        public static double ErrorFunc(double input, double desiredOutput)
+        public static double MeanSquareError(double output, double desiredOutput)
         {
-            return Math.Pow(input - desiredOutput, 2);
+            return Math.Pow(output - desiredOutput, 2);
         }
 
         public static double MeanSquaredErrorDerivative(double output, double desiredOutput)

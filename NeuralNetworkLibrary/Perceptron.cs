@@ -17,7 +17,7 @@ namespace NeuralNetworkLibrary
         private double biasMutationAmount;
         private Random random;
         private ActivationFunction activationFunction;
-        private ErrorFunction errorFunc;
+        public ErrorFunction ErrorFunc;
 
         public Perceptron(double[] initialWeightValues, double initialBiasValue,
           double weightMutationAmount, double biasMutationAmount, ErrorFunction errorFunc, ActivationFunction activationFunction)
@@ -27,13 +27,14 @@ namespace NeuralNetworkLibrary
             this.weightMutationAmount = weightMutationAmount;
             this.biasMutationAmount = biasMutationAmount;
             random = new Random();
-            this.errorFunc = errorFunc;
+            this.ErrorFunc = errorFunc;
             this.activationFunction = activationFunction;
         }
 
         public void Randomize(int min, int max)
         {
             for(int i = 0; i < Weights.Length; i++) Weights[i] = random.Next(min, max);
+            Bias = random.Next(min, max);
         }
 
         private (double[], double) MutateHillClimber()
@@ -78,7 +79,7 @@ namespace NeuralNetworkLibrary
             double[] values = Compute(inputs, weights, bias);
             for(int i = 0; i < values.Length; i++)
             {
-                error += errorFunc.Function(values[i], desiredOutputs[i]);
+                error += ErrorFunc.Function(values[i], desiredOutputs[i]);
             }            
 
             return error / values.Length;
@@ -106,7 +107,7 @@ namespace NeuralNetworkLibrary
             double sum = 0;
             for (int i = 0; i < inputs.Length; i++) sum += inputs[i] * Weights[i];
              
-            return errorFunc.Derivative(Compute(inputs, Weights, Bias), desiredOutputs) * activationFunction.Derivative(sum + Bias);
+            return ErrorFunc.Derivative(Compute(inputs, Weights, Bias), desiredOutputs) * activationFunction.Derivative(sum + Bias);
         }
 
         private (double[], double) GetMutateValues(double[] inputs, double desiredOutput)
@@ -165,8 +166,6 @@ namespace NeuralNetworkLibrary
         {
             (double[], double) mutationAmounts = GetBachMutateValues(inputs, desiredOutputs);
             (double[], double) mutated = Mutate(mutationAmounts.Item1, mutationAmounts.Item2);
-
-            double mutatedError = GetError(inputs, desiredOutputs, mutated.Item1, mutated.Item2);
 
             Weights = mutated.Item1;
             Bias = mutated.Item2;
