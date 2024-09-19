@@ -9,7 +9,7 @@ namespace NeuralNetworkLibrary
     public class Layer
     {
         public Neuron[] Neurons { get; }
-        public double[] Outputs { get; }
+        public double[] Outputs { get; private set; }
 
         public Layer(ActivationFunction activation, int neuronCount, Layer previousLayer) 
         {
@@ -19,6 +19,11 @@ namespace NeuralNetworkLibrary
                 Neurons[i] = new Neuron(activation, previousLayer.Neurons);
             }
             Outputs = Compute();
+        }
+
+        public void SetOutputs(double[] values)
+        {
+            Outputs = values;
         }
 
         public void Randomize(Random random, int min, int max) 
@@ -31,12 +36,11 @@ namespace NeuralNetworkLibrary
 
         public double[] Compute() 
         {
-            double[] results = new double[Neurons.Length];
-            for(int i = 0; i < results.Length; i++)
+            for(int i = 0; i < Outputs.Length; i++)
             {
-                results[i] = Neurons[i].Compute();
+                Outputs[i] = Neurons[i].Compute();
             }
-            return results;
+            return Outputs;
         }
     }
 }
