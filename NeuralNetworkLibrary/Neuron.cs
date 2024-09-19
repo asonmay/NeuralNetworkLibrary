@@ -9,8 +9,8 @@ namespace NeuralNetworkLibrary
 {
     public class Neuron
     {
-        private double bias;
-        private Dendrite[] dendrites;
+        public double Bias;
+        public Dendrite[] Dendrites;
         public double Output { get; set; }
         public double Input { get; private set; }
         public ActivationFunction Activation { get; set; }
@@ -18,30 +18,30 @@ namespace NeuralNetworkLibrary
         public Neuron(ActivationFunction activation, Neuron[] previousNerons) 
         {
             Activation = activation;
-            dendrites = new Dendrite[previousNerons.Length];
+            Dendrites = new Dendrite[previousNerons.Length];
             for(int i = 0; i < previousNerons.Length; i++)
             {
-                dendrites[i] = new Dendrite(previousNerons[i], this, 1);
+                Dendrites[i] = new Dendrite(previousNerons[i], this, 1);
             }
         }
 
         public void Randomize(Random random, int min, int max) 
         {
-            bias = random.Next(min, max);
-            for(int i = 0; i < dendrites.Length; i++)
+            Bias = random.Next(min, max);
+            for(int i = 0; i < Dendrites.Length; i++)
             {
-                dendrites[i].Weight = random.Next(min, max);
+                Dendrites[i].Weight = random.Next(min, max);
             }
         }
 
         public double Compute() 
         {
             double sum = 0;
-            for(int i = 0; i <= dendrites.Length; i++)
+            for(int i = 0; i <= Dendrites.Length; i++)
             {
-                sum += dendrites[i].Compute();
+                sum += Dendrites[i].Compute();
             }
-            return sum + bias;
+            return sum + Bias;
         }
     }
 }
