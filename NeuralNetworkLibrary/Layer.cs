@@ -16,8 +16,16 @@ namespace NeuralNetworkLibrary
             Neurons = new Neuron[neuronCount];
             for(int i = 0; i < Neurons.Length; i++)
             {
-                Neurons[i] = new Neuron(activation, previousLayer.Neurons);
+                if(previousLayer == null)
+                {
+                    Neurons[i] = new Neuron(activation, []);
+                }
+                else
+                {
+                    Neurons[i] = new Neuron(activation, previousLayer.Neurons);
+                }
             }
+            Outputs = new double[neuronCount];
             Outputs = Compute();
         }
 

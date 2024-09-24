@@ -37,7 +37,7 @@ namespace NeuralNetworkLibrary
         public double Compute() 
         {
             double sum = 0;
-            for(int i = 0; i <= Dendrites.Length; i++)
+            for(int i = 0; i < Dendrites.Length; i++)
             {
                 sum += Dendrites[i].Compute();
             }
