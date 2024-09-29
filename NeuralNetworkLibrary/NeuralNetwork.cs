@@ -20,7 +20,6 @@ namespace NeuralNetworkLibrary
                 Layer prev = new Layer(activation, 0, null);
                 if (i - 1 >= 0)
                 {
-                    prev = new Layer(activation, neuronsPerLayer[i - 1], Layers[i]);
                     prev = Layers[i - 1];
                 }
 
