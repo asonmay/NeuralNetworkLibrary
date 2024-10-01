@@ -7,18 +7,19 @@ using System.Threading.Tasks;
 
 namespace NeuralNetworkLibrary
 {
-    public class GeneticTrainer
+    public class GeneticTrainer<T> where T : INeuralNetwork
     {
-        private NeuralNetwork[] networks;
-
+        public T[] Networks;
         private double mutationRate;
         private int min;
         private int max;
 
-        public GeneticTrainer(int min, int max)
+        public GeneticTrainer(int min, int max, double mutationRate, T[] networks)
         {
             this.min = min;
             this.max = max;
+            this.mutationRate = mutationRate;
+            Networks = networks;
         }
 
         private void MutateWeights(Neuron neuron, Random random)
@@ -30,11 +31,11 @@ namespace NeuralNetworkLibrary
                     int randomNum = random.Next(3);
                     if (randomNum == 0)
                     {
-                        neuron.Bias += 1;
+                        neuron.Dendrites[i].Weight += mutationRate;
                     }
                     else if (randomNum == 1)
                     {
-                        neuron.Bias -= 1;
+                        neuron.Dendrites[i].Weight -= mutationRate;
                     }
                     else
                     {
@@ -51,11 +52,11 @@ namespace NeuralNetworkLibrary
                 int randomNum = random.Next(3);
                 if (randomNum == 0)
                 {
-                    neuron.Bias += 1;
+                    neuron.Bias += mutationRate;
                 }
                 else if (randomNum == 1)
                 {
-                    neuron.Bias -= 1;
+                    neuron.Bias -= mutationRate;
                 }
                 else
                 {
@@ -105,22 +106,22 @@ namespace NeuralNetworkLibrary
             }
         }
 
-        public void Train((NeuralNetwork net, double fitness)[] population, Random random, double mutationRate)
+        public void Train(Random random)
         {
-            Array.Sort(population, (a, b) => b.fitness.CompareTo(a.fitness));
+            Array.Sort(Networks, (a, b) => b.Fitness.CompareTo(a.Fitness));
 
-            int start = (int)(population.Length * 0.1);
-            int end = (int)(population.Length * 0.9);
+            int start = (int)(Networks.Length * 0.05);
+            int end = (int)(Networks.Length * 0.9);
 
             for (int i = start; i < end; i++)
             {
-                Crossover(population[random.Next(start)].net, population[i].net, random);
-                Mutate(population[i].net, random);
+                Crossover(Networks[random.Next(start)].Network, Networks[i].Network, random);
+                Mutate(Networks[i].Network, random);
             }
 
-            for (int i = end; i < population.Length; i++)
+            for (int i = end; i < Networks.Length; i++)
             {
-                population[i].net.Randomize(random, min, max);
+                Networks[i].Network.Randomize(random, min, max);
             }
         }
     }

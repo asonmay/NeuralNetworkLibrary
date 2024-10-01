@@ -15,15 +15,10 @@ namespace NeuralNetworkLibrary
         public NeuralNetwork(ActivationFunction activation, ErrorFunction errorFunc, params int[] neuronsPerLayer)
         {
             Layers = new Layer[neuronsPerLayer.Length];
-            for(int i = 0; i < neuronsPerLayer.Length; i++)
+            Layers[0] = new Layer(activation, neuronsPerLayer[0], null);
+            for (int i = 1; i < neuronsPerLayer.Length; i++)
             {
-                Layer prev = new Layer(activation, 0, null);
-                if (i - 1 >= 0)
-                {
-                    prev = Layers[i - 1];
-                }
-
-                Layers[i] = new Layer(activation, neuronsPerLayer[i], prev);
+                Layers[i] = new Layer(activation, neuronsPerLayer[i], Layers[i-1]);
             }
             this.errorFunc = errorFunc;
         }

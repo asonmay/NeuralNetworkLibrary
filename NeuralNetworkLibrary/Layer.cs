@@ -32,6 +32,10 @@ namespace NeuralNetworkLibrary
         public void SetOutputs(double[] values)
         {
             Outputs = values;
+            for(int i = 0; i < Neurons.Length; i++)
+            {
+                Neurons[i].Output = Outputs[i];
+            }
         }
 
         public void Randomize(Random random, int min, int max) 
