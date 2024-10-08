@@ -52,6 +52,7 @@ namespace NeuralNetworkLibrary
             {
                 Outputs[i] = Neurons[i].Compute();
             }
+            SetOutputs(Outputs);
             return Outputs;
         }
     }

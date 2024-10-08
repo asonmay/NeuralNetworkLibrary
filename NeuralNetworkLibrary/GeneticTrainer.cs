@@ -86,8 +86,8 @@ namespace NeuralNetworkLibrary
 
                 int cutPoint = random.Next(winLayer.Neurons.Length);
                 bool flip = random.Next(2) == 0;
-
-                for (int j = (flip ? 0 : cutPoint); j < (flip ? cutPoint : winLayer.Neurons.Length); j++)
+                int count = flip ? cutPoint : winLayer.Neurons.Length;
+                for (int j = (flip ? 0 : cutPoint); j < count; j++)
                 {
                     Neuron winNeuron = winLayer.Neurons[j];
                     Neuron childNeuron = childLayer.Neurons[j];
@@ -110,7 +110,7 @@ namespace NeuralNetworkLibrary
         {
             Array.Sort(Networks, (a, b) => b.Fitness.CompareTo(a.Fitness));
 
-            int start = (int)(Networks.Length * 0.05);
+            int start = (int)(Networks.Length * 0.1);
             int end = (int)(Networks.Length * 0.9);
 
             for (int i = start; i < end; i++)

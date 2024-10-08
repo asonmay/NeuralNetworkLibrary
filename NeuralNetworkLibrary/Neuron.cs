@@ -30,7 +30,7 @@ namespace NeuralNetworkLibrary
             Bias = random.Next(min, max);
             for(int i = 0; i < Dendrites.Length; i++)
             {
-                Dendrites[i].Weight = random.Next(min, max);
+                Dendrites[i].Weight = random.NextDouble() * (Math.Abs(min) + Math.Abs(max) + 1) + min;
             }
         }
 
