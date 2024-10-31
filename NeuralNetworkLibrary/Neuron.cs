@@ -10,18 +10,41 @@ namespace NeuralNetworkLibrary
     public class Neuron
     {
         public double Bias;
+        public double UpdateBias;
         public Dendrite[] Dendrites;
         public double Output { get; set; }
         public double Input { get; private set; }
         public ActivationFunction Activation { get; set; }
+        private ErrorFunction error;
 
-        public Neuron(ActivationFunction activation, Neuron[] previousNerons) 
+        public Neuron(ActivationFunction activation, Neuron[] previousNerons, ErrorFunction error) 
         {
             Activation = activation;
             Dendrites = new Dendrite[previousNerons.Length];
             for(int i = 0; i < previousNerons.Length; i++)
             {
                 Dendrites[i] = new Dendrite(previousNerons[i], this, 1);
+            }
+            this.error = error;
+        }
+
+        public void ApplyChanges()
+        {
+            Bias = UpdateBias;
+            UpdateBias = 0;
+            for(int i = 0; i < Dendrites.Length; i++)
+            {
+                Dendrites[i].ApplyChanges();
+            }
+        }
+
+        public void BackProp(double learningRate)
+        {
+            for(int i = 0; i < Dendrites.Length; i++)
+            {
+                double output = Compute();
+                double partialDerivative = error.Derivative;
+                double derivitive = partialDerivative * Activation.Derivative(output) * Dendrites[i].Previous.Output;
             }
         }
 

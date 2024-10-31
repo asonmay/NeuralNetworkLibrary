@@ -10,16 +10,21 @@ namespace NeuralNetworkLibrary
     public class GeneticTrainer<T> where T : INeuralNetwork
     {
         public T[] Networks;
+        public int Generation;
         private double mutationRate;
         private int min;
         private int max;
+        private double copyPercent;
+        private double randomizePercent;
 
-        public GeneticTrainer(int min, int max, double mutationRate, T[] networks)
+        public GeneticTrainer(int min, int max, double mutationRate, T[] networks, double copyPercent, double randomizePercent)
         {
             this.min = min;
             this.max = max;
             this.mutationRate = mutationRate;
             Networks = networks;
+            this.copyPercent = copyPercent;
+            this.randomizePercent = randomizePercent;
         }
 
         private void MutateWeights(Neuron neuron, Random random)
@@ -106,12 +111,18 @@ namespace NeuralNetworkLibrary
             }
         }
 
-        public void Train(Random random)
+        public void SortByFitness()
         {
             Array.Sort(Networks, (a, b) => b.Fitness.CompareTo(a.Fitness));
+        }
 
-            int start = (int)(Networks.Length * 0.1);
-            int end = (int)(Networks.Length * 0.9);
+        public void Train(Random random)
+        {
+            Generation++;
+            Array.Sort(Networks, (a, b) => b.Fitness.CompareTo(a.Fitness));
+
+            int start = (int)(Networks.Length * copyPercent);
+            int end = (int)(Networks.Length * (1 - randomizePercent));
 
             for (int i = start; i < end; i++)
             {

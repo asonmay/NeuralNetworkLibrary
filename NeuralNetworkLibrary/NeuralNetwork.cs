@@ -31,6 +31,14 @@ namespace NeuralNetworkLibrary
             }
         }
 
+        public void ApplyChanges()
+        {
+            for(int i = 0; i < Layers.Length; i++)
+            {
+                Layers[i].ApplyChanges();
+            }
+        }
+
         public double[] Compute(double[] inputs) 
         {
             Layers[0].SetOutputs(inputs);

@@ -29,6 +29,14 @@ namespace NeuralNetworkLibrary
             Outputs = Compute();
         }
 
+        public void ApplyChanges()
+        {
+            for(int i = 0; i < Neurons.Length; i++)
+            {
+                Neurons[i].ApplyChanges();
+            }
+        }
+
         public void SetOutputs(double[] values)
         {
             Outputs = values;
@@ -51,8 +59,8 @@ namespace NeuralNetworkLibrary
             for(int i = 0; i < Outputs.Length; i++)
             {
                 Outputs[i] = Neurons[i].Compute();
+                Neurons[i].Output = Outputs[i];
             }
-            SetOutputs(Outputs);
             return Outputs;
         }
     }
