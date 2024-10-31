@@ -16,6 +16,7 @@ namespace NeuralNetworkLibrary
         public double Input { get; private set; }
         public ActivationFunction Activation { get; set; }
         private ErrorFunction error;
+        public double Delta;
 
         public Neuron(ActivationFunction activation, Neuron[] previousNerons, ErrorFunction error) 
         {
@@ -43,8 +44,7 @@ namespace NeuralNetworkLibrary
             for(int i = 0; i < Dendrites.Length; i++)
             {
                 double output = Compute();
-                double partialDerivative = error.Derivative;
-                double derivitive = partialDerivative * Activation.Derivative(output) * Dendrites[i].Previous.Output;
+                double derivitive = Delta * Activation.Derivative(output) * Dendrites[i].Previous.Output;
             }
         }
 
