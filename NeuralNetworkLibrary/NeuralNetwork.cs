@@ -51,6 +51,19 @@ namespace NeuralNetworkLibrary
             return Layers[Layers.Length - 1].Outputs;
         }
 
+        public void BackProp(double learningRate, double[] desiredOutput)
+        {
+            for(int i = 0; i < Layers[Layers.Length - 1].Neurons.Length; i++)
+            {
+                Layers[Layers.Length - 1].Neurons[i].Delta = errorFunc.Derivative(Layers[Layers.Length - 1].Neurons[i].Output, desiredOutput[i]);
+            }
+            
+            for(int i = Layers.Length - 1; i >= 0; i--)
+            {
+                Layers[i].BackProp(learningRate);
+            }
+        }
+
         public double GetError(double[] inputs, double[] desiredOutputs) 
         {
             double[] output = Compute(inputs);

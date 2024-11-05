@@ -11,18 +11,18 @@ namespace NeuralNetworkLibrary
         public Neuron[] Neurons { get; }
         public double[] Outputs { get; private set; }
 
-        public Layer(ActivationFunction activation, int neuronCount, Layer previousLayer) 
+        public Layer(ActivationFunction activation, int neuronCount, Layer previousLayer, ErrorFunction error) 
         {
             Neurons = new Neuron[neuronCount];
             for(int i = 0; i < Neurons.Length; i++)
             {
                 if(previousLayer == null)
                 {
-                    Neurons[i] = new Neuron(activation, []);
+                    Neurons[i] = new Neuron(activation, [], error);
                 }
                 else
                 {
-                    Neurons[i] = new Neuron(activation, previousLayer.Neurons);
+                    Neurons[i] = new Neuron(activation, previousLayer.Neurons, error);
                 }
             }
             Outputs = new double[neuronCount];
@@ -51,6 +51,14 @@ namespace NeuralNetworkLibrary
             for(int i = 0; i < Neurons.Length; i++)
             {
                 Neurons[i].Randomize(random, min, max);
+            }
+        }
+
+        public void BackProp(double learningRate)
+        {
+            for(int i = 0; i < Neurons.Length; i++)
+            {
+                Neurons[i].BackProp(learningRate);
             }
         }
 
