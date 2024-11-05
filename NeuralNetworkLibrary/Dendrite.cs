@@ -27,7 +27,7 @@ namespace NeuralNetworkLibrary
 
         public void ApplyChanges()
         {
-            Weight = UpdateWeight;
+            Weight += UpdateWeight;
             UpdateWeight = 0;
         }
     }

@@ -12,11 +12,12 @@ namespace NeuralNetworkLibrary
         private double[][] inputs;
         private double[][] desiredOutputs;
 
-        public GradientDescentTrainer(double[][] inputs, double[][]desiredOutputs, ActivationFunction activation, ErrorFunction error, params int[] neuronsPerLayer)
+        public GradientDescentTrainer(double[][] inputs, double[][]desiredOutputs, ActivationFunction activation, ErrorFunction error, int min, int max, params int[] neuronsPerLayer)
         {
             this.inputs = inputs;
             this.desiredOutputs = desiredOutputs;
             Network = new NeuralNetwork(activation, error, neuronsPerLayer);
+            Network.Randomize(new Random(), min, max);
         }
 
         public double Train(double learningRate)
@@ -33,6 +34,16 @@ namespace NeuralNetworkLibrary
                 error = Network.GetError(inputs[i], desiredOutputs[i]);
             }
             return error / desiredOutputs.Length;
+        }
+
+        public void Train(double learningRate, double iterations)
+        {
+            double current = 0;
+            while(current < iterations)
+            {
+                Train(learningRate);
+                current++;
+            }
         }
     }
 }

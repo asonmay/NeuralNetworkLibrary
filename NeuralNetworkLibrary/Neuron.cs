@@ -31,7 +31,7 @@ namespace NeuralNetworkLibrary
 
         public void ApplyChanges()
         {
-            Bias = UpdateBias;
+            Bias += UpdateBias;
             UpdateBias = 0;
             for(int i = 0; i < Dendrites.Length; i++)
             {
@@ -45,10 +45,10 @@ namespace NeuralNetworkLibrary
             double derivitive = Delta * Activation.Derivative(output);
             for (int i = 0; i < Dendrites.Length; i++)
             {             
-                Dendrites[i].UpdateWeight = Dendrites[i].Weight + (learningRate * -(derivitive * Dendrites[i].Previous.Output));
+                Dendrites[i].UpdateWeight += learningRate * -(derivitive * Dendrites[i].Previous.Output);
                 Dendrites[i].Previous.Delta += Delta * Dendrites[i].Weight;
             }
-            UpdateBias = Bias + derivitive;
+            UpdateBias += learningRate * -derivitive;
             Delta = 0;
         }
 
