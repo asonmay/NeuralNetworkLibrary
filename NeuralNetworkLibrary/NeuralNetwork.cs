@@ -23,7 +23,7 @@ namespace NeuralNetworkLibrary
             this.errorFunc = errorFunc;
         }
 
-        public void Randomize(Random random, int min, int max) 
+        public void Randomize(Random random, double min, double max) 
         {
             for(int i = 0; i < Layers.Length; i++)
             {
@@ -51,14 +51,14 @@ namespace NeuralNetworkLibrary
             return Layers[Layers.Length - 1].Outputs;
         }
 
-        public void BackProp(double learningRate, double[] desiredOutput)
+        public void BackProp(double learningRate, double[] desiredOutput, double[] inputs)
         {
             for(int i = 0; i < Layers[Layers.Length - 1].Neurons.Length; i++)
             {
                 Layers[Layers.Length - 1].Neurons[i].Delta = errorFunc.Derivative(Layers[Layers.Length - 1].Neurons[i].Output, desiredOutput[i]);
             }
             
-            for(int i = Layers.Length - 1; i >= 0; i--)
+            for(int i = Layers.Length - 1; i > 0; i--)
             {
                 Layers[i].BackProp(learningRate);
             }
@@ -74,6 +74,16 @@ namespace NeuralNetworkLibrary
             }
 
             return error.Sum();
+        }
+
+        public double GetError(double[][] inputs, double[][] desiredOutputs)
+        {
+            double error = 0;
+            for(int i = 0; i < inputs.Length; i++)
+            {
+                error += GetError(inputs[i], desiredOutputs[i]);
+            }
+            return error / inputs.Length;
         }
     }
 }

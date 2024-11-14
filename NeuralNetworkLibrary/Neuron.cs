@@ -42,20 +42,21 @@ namespace NeuralNetworkLibrary
         public void BackProp(double learningRate)
         {
             double output = Compute();
-            double derivitive = Delta * Activation.Derivative(output);
+            double derivative = Delta * Activation.Derivative(output);
             for (int i = 0; i < Dendrites.Length; i++)
             {             
-                Dendrites[i].UpdateWeight += learningRate * -(derivitive * Dendrites[i].Previous.Output);
-                Dendrites[i].Previous.Delta += Delta * Dendrites[i].Weight;
+                Dendrites[i].UpdateWeight += learningRate * -(derivative * Dendrites[i].Previous.Output);
+
+                Dendrites[i].Previous.Delta += Delta * Dendrites[i].Weight * Activation.Derivative(output);
             }
-            UpdateBias += learningRate * -derivitive;
+            UpdateBias += learningRate * -derivative;
             Delta = 0;
         }
 
-        public void Randomize(Random random, int min, int max) 
+        public void Randomize(Random random, double min, double max) 
         {
-            Bias = random.Next(min, max);
-            for(int i = 0; i < Dendrites.Length; i++)
+            Bias = random.NextDouble() * (Math.Abs(min) + Math.Abs(max) + 1) + min;
+            for (int i = 0; i < Dendrites.Length; i++)
             {
                 Dendrites[i].Weight = random.NextDouble() * (Math.Abs(min) + Math.Abs(max) + 1) + min;
             }

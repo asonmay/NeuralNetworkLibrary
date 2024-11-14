@@ -8,15 +8,7 @@ namespace NeuralNetworkLibrary
 {
     public static class ActivationAndErrorFunctions
     {
-        public static double MeanSquareError(double output, double desiredOutput)
-        {
-            return Math.Pow(output - desiredOutput, 2);
-        }
-
-        public static double MeanSquaredErrorDerivative(double output, double desiredOutput)
-        {
-            return -2 * (desiredOutput - output);
-        }
+        public static ErrorFunction MSE => new((x, y) => (x - y) * (x - y), (x, y) => -2 * (x - y));
 
         public static double BinaryStep(double input)
         {
@@ -35,11 +27,6 @@ namespace NeuralNetworkLibrary
             return input;
         }
 
-        public static double RawValue(double input)
-        {
-            return input;
-        }
-
         public static double IdentityDerivative(double input)
         {
             return 1;
@@ -48,6 +35,12 @@ namespace NeuralNetworkLibrary
         public static double TanHDerivative(double input)
         {
             return 1 - Math.Pow(Math.Tanh(input), 2);
+        }
+
+        public static double LeakyTanHDerivative(double input)
+        {
+            double value = TanHDerivative(input);
+            return value == 0 ? 0.0000001 : value;
         }
 
         public static double TanH(double input)
