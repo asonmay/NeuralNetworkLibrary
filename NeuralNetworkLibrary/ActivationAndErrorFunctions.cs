@@ -8,7 +8,7 @@ namespace NeuralNetworkLibrary
 {
     public static class ActivationAndErrorFunctions
     {
-        public static ErrorFunction MSE => new((x, y) => (x - y) * (x - y), (x, y) => -2 * (x - y));
+        public static ErrorFunction MSE => new((x, y) => (x - y) * (x - y), (x, y) => 2 * (x - y));
 
         public static double BinaryStep(double input)
         {
@@ -46,6 +46,11 @@ namespace NeuralNetworkLibrary
         public static double TanH(double input)
         {
             return Math.Tanh(input);
+        }
+
+        public static double BinaryStepDerivative(double input)
+        {
+            return 0;
         }
     }
 }

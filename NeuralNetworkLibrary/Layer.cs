@@ -11,18 +11,18 @@ namespace NeuralNetworkLibrary
         public Neuron[] Neurons { get; }
         public double[] Outputs { get; private set; }
 
-        public Layer(ActivationFunction activation, int neuronCount, Layer previousLayer, ErrorFunction error) 
+        public Layer(ActivationFunction activation, int neuronCount, Layer previousLayer) 
         {
             Neurons = new Neuron[neuronCount];
             for(int i = 0; i < Neurons.Length; i++)
             {
                 if(previousLayer == null)
                 {
-                    Neurons[i] = new Neuron(activation, [], error);
+                    Neurons[i] = new Neuron(activation, []);
                 }
                 else
                 {
-                    Neurons[i] = new Neuron(activation, previousLayer.Neurons, error);
+                    Neurons[i] = new Neuron(activation, previousLayer.Neurons);
                 }
             }
             Outputs = new double[neuronCount];

@@ -15,10 +15,9 @@ namespace NeuralNetworkLibrary
         public double Output { get; set; }
         public double Input { get; private set; }
         public ActivationFunction Activation { get; set; }
-        private ErrorFunction error;
         public double Delta;
 
-        public Neuron(ActivationFunction activation, Neuron[] previousNerons, ErrorFunction error) 
+        public Neuron(ActivationFunction activation, Neuron[] previousNerons) 
         {
             Activation = activation;
             Dendrites = new Dendrite[previousNerons.Length];
@@ -26,7 +25,6 @@ namespace NeuralNetworkLibrary
             {
                 Dendrites[i] = new Dendrite(previousNerons[i], this, 1);
             }
-            this.error = error;
         }
 
         public void ApplyChanges()
@@ -47,7 +45,7 @@ namespace NeuralNetworkLibrary
             {             
                 Dendrites[i].UpdateWeight += learningRate * -(derivative * Dendrites[i].Previous.Output);
 
-                Dendrites[i].Previous.Delta += Delta * Dendrites[i].Weight * Activation.Derivative(output);
+                Dendrites[i].Previous.Delta = Delta * Dendrites[i].Weight * Activation.Derivative(output);
             }
             UpdateBias += learningRate * -derivative;
             Delta = 0;
@@ -69,7 +67,7 @@ namespace NeuralNetworkLibrary
             {
                 sum += Dendrites[i].Compute();
             }
-            return sum + Bias;
+            return sum + Bias; 
         }
     }
 }

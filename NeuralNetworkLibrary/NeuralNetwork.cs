@@ -11,16 +11,18 @@ namespace NeuralNetworkLibrary
     {
         public Layer[] Layers;
         private ErrorFunction errorFunc;
+        private ActivationFunction activation;
 
         public NeuralNetwork(ActivationFunction activation, ErrorFunction errorFunc, params int[] neuronsPerLayer)
         {
             Layers = new Layer[neuronsPerLayer.Length];
-            Layers[0] = new Layer(activation, neuronsPerLayer[0], null, errorFunc);
+            Layers[0] = new Layer(activation, neuronsPerLayer[0], null);
             for (int i = 1; i < neuronsPerLayer.Length; i++)
             {
-                Layers[i] = new Layer(activation, neuronsPerLayer[i], Layers[i-1], errorFunc);
+                Layers[i] = new Layer(activation, neuronsPerLayer[i], Layers[i-1]);
             }
             this.errorFunc = errorFunc;
+            this.activation = activation;
         }
 
         public void Randomize(Random random, double min, double max) 
@@ -49,6 +51,16 @@ namespace NeuralNetworkLibrary
             }
 
             return Layers[Layers.Length - 1].Outputs;
+        }
+
+        public double[] ApplyActivation(double[] inputs)
+        {
+            double[] newValues = new double[inputs.Length];
+            for(int i = 0; i < newValues.Length; i++)
+            {
+                newValues[i] = activation.Function(inputs[i]);
+            }
+            return newValues;
         }
 
         public void BackProp(double learningRate, double[] desiredOutput, double[] inputs)
