@@ -33,11 +33,11 @@ namespace NeuralNetworkLibrary
             }
         }
 
-        public void ApplyChanges()
+        public void ApplyChanges(double momentum)
         {
             for(int i = 0; i < Layers.Length; i++)
             {
-                Layers[i].ApplyChanges();
+                Layers[i].ApplyChanges(momentum);
             }
         }
 

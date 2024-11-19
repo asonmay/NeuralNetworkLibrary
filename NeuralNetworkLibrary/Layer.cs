@@ -29,11 +29,11 @@ namespace NeuralNetworkLibrary
             Outputs = Compute();
         }
 
-        public void ApplyChanges()
+        public void ApplyChanges(double momentum)
         {
             for(int i = 0; i < Neurons.Length; i++)
             {
-                Neurons[i].ApplyChanges();
+                Neurons[i].ApplyChanges(momentum);
             }
         }
 

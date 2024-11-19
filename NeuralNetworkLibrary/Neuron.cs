@@ -17,6 +17,7 @@ namespace NeuralNetworkLibrary
         public ActivationFunction Activation { get; set; }
         public double Delta;
 
+        private double previousUpdaetBias;
         public Neuron(ActivationFunction activation, Neuron[] previousNerons) 
         {
             Activation = activation;
@@ -27,13 +28,15 @@ namespace NeuralNetworkLibrary
             }
         }
 
-        public void ApplyChanges()
+        public void ApplyChanges(double momentum)
         {
+            UpdateBias += previousUpdaetBias * momentum;
             Bias += UpdateBias;
+            previousUpdaetBias = UpdateBias;
             UpdateBias = 0;
             for(int i = 0; i < Dendrites.Length; i++)
             {
-                Dendrites[i].ApplyChanges();
+                Dendrites[i].ApplyChanges(momentum);
             }
         }
 
@@ -67,7 +70,7 @@ namespace NeuralNetworkLibrary
             {
                 sum += Dendrites[i].Compute();
             }
-            return sum + Bias; 
+            return Activation.Function(sum + Bias); 
         }
     }
 }

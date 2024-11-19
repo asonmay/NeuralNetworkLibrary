@@ -23,14 +23,17 @@ namespace NeuralNetworkLibrary
             activationFunction = activation;
         }
 
-        public double Train(double learningRate, double currentError)
+        public double Train(double learningRate, double currentError, double momentum, int batchSize)
         {
-            for(int i = 0; i < desiredOutputs.Length; i++)
+            for(int i = 0; i < batchSize; i++)
             {
-                Network.Compute(inputs[i]);
-                Network.BackProp(GetLearningRate(currentError, learningRate), desiredOutputs[i], inputs[i]);
-            }
-            Network.ApplyChanges();
+                for (int x = i * batchSize; x < (i + 1) * batchSize; x++)
+                {
+                    Network.Compute(inputs[x]);
+                    Network.BackProp(GetLearningRate(currentError, learningRate), desiredOutputs[x], inputs[x]);
+                }
+                Network.ApplyChanges(momentum);
+            } 
 
             double error = Network.GetError(inputs,desiredOutputs);
             Console.SetCursorPosition(0, 0);
@@ -39,44 +42,25 @@ namespace NeuralNetworkLibrary
             return error;
         }
 
-        public void Train(double learningRate, int iterations, double currentError)
-        {
-            double current = 0;
-            while(current < iterations)
-            {
-                Train(learningRate, currentError);
-                current++;
-            }
-        }
-
         private double GetLearningRate(double error, double original)
         {
             return original * error;
         }
 
-        public void Train(double learningRate, float error)
+        public void Train(double learningRate, float error, double momentum, int batchSize)
         {
             double currentError = Network.GetError(inputs, desiredOutputs);
-            while (true)
-            {
-                
-                currentError = Train(learningRate, currentError);
+            while (currentError > error)
+            { 
+                currentError = Train(learningRate, currentError, momentum, batchSize);
                 for(int i = 0; i < inputs.Length; i++)
                 {
                     Console.SetCursorPosition(0, i + 1);
-                    //Console.Write("the sine of ");
-                    //Console.Write(inputs[i][0]);
-                    //Console.Write(" is ");
-                    //Console.Write(Network.Compute(inputs[i])[0]);
-                    
+                    Console.Write("the sine of ");
                     Console.Write(inputs[i][0]);
-                    Console.Write(" XOR ");
-                    Console.Write(inputs[i][1]);
                     Console.Write(" is ");
                     Console.Write(Network.Compute(inputs[i])[0]);
-                    Console.Write($" Error: {Network.GetError(inputs[i], desiredOutputs[i])}");
                 }
-                ;
             }
         }
     }
