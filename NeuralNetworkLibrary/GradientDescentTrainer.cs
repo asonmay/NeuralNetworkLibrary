@@ -14,7 +14,7 @@ namespace NeuralNetworkLibrary
         private double[][] desiredOutputs;
         private ActivationFunction activationFunction;
 
-        public GradientDescentTrainer(double[][] inputs, double[][]desiredOutputs, ActivationFunction activation, ErrorFunction error, double min, double max, params int[] neuronsPerLayer)
+        public GradientDescentTrainer(double[][] inputs, double[][] desiredOutputs, ActivationFunction activation, ErrorFunction error, double min, double max, params int[] neuronsPerLayer)
         {
             this.inputs = inputs;
             this.desiredOutputs = desiredOutputs;
