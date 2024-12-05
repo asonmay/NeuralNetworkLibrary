@@ -8,7 +8,7 @@ namespace NeuralNetworkLibrary
 {
     public interface IGameState<T> where T : IGameState<T>
     {
-        public bool IsWin { get; set; }
+        public bool IsWin { get; }
         public bool IsTie { get; }
         public bool IsLoss { get; }
         public bool IsTerminal { get; }
