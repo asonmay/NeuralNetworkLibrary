@@ -117,7 +117,7 @@ namespace NeuralNetworkLibrary
             }
         }
 
-        public T GetBestMove(Node<T> currentNode)
+        public Node<T> GetBestMove(Node<T> currentNode)
         {
             if(!currentNode.IsExpanded)
             {
@@ -126,7 +126,7 @@ namespace NeuralNetworkLibrary
 
             var sortedChildren = currentNode.Children.OrderByDescending((state) => state.W);
             var topChild = sortedChildren.First();
-            return topChild.GameState;
+            return topChild;
         }
     }
 }
