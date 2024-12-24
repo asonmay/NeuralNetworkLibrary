@@ -76,6 +76,10 @@ namespace NeuralNetworkLibrary
             {
                 currentNode.IsExpanded = true;
                 currentNode.GenerateChildren();
+                if(currentNode.Children.Length == 0)
+                {
+                    ;
+                }
                 int randomIndex = random.Next(0, currentNode.Children.Length);
                 currentNode = currentNode.Children[randomIndex];
             }
@@ -119,10 +123,7 @@ namespace NeuralNetworkLibrary
 
         public Node<T> GetBestMove(Node<T> currentNode)
         {
-            if(!currentNode.IsExpanded)
-            {
-                GenerateTree(currentNode, iterations);
-            }
+            GenerateTree(currentNode, iterations);
 
             var sortedChildren = currentNode.Children.OrderByDescending((state) => state.W);
             var topChild = sortedChildren.First();

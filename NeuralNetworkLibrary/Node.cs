@@ -20,11 +20,12 @@ namespace NeuralNetworkLibrary
             GameState = gameState;
         }
 
-        public Node(T gameState, double w, double n)
+        public Node(T gameState, double w, double n, Node<T> parent)
         {
             GameState = gameState;
             W = w;
             N = n;
+            Parent = parent;
             IsExpanded = false;
         }
 
@@ -39,7 +40,7 @@ namespace NeuralNetworkLibrary
             Children = new Node<T>[gameStates.Length];
             for(int i = 0; i < gameStates.Length; i++)
             {
-                Children[i] = new Node<T>(GameState.GetChildren()[i], 0, 0);
+                Children[i] = new Node<T>(GameState.GetChildren()[i], 0, 0, this);
             }
         }
     }
