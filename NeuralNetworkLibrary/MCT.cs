@@ -76,10 +76,6 @@ namespace NeuralNetworkLibrary
             {
                 currentNode.IsExpanded = true;
                 currentNode.GenerateChildren();
-                if(currentNode.Children.Length == 0)
-                {
-                    ;
-                }
                 int randomIndex = random.Next(0, currentNode.Children.Length);
                 currentNode = currentNode.Children[randomIndex];
             }
@@ -98,9 +94,8 @@ namespace NeuralNetworkLibrary
             }
         }
 
-        public void Backpropagate(int value, Node<T> simulatedNode)
+        public void Backpropagate(int value, Node<T> currentNode)
         {
-            Node<T> currentNode = simulatedNode;
             while (currentNode != null)
             {
                 value = -value;
