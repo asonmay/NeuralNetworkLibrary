@@ -17,15 +17,13 @@ namespace NeuralNetworkLibrary
         {
             this.c = c;
             this.iterations = iterations;
-            random = new Random();
+            random = new Random(14375);
         }
 
         public MCT(Node<T> head, double c, int iterations)
+            :this(c, iterations)
         {
             Head = head;
-            this.c = c;
-            this.iterations = iterations;
-            random = new Random();
         }
 
         public Node<T> Select(Node<T> root)
@@ -65,7 +63,7 @@ namespace NeuralNetworkLibrary
             }
             else
             {
-                return currentNode.Children[0];
+                return currentNode.Children[random.Next(currentNode.Children.Length)];
             }
         }
 
@@ -74,7 +72,6 @@ namespace NeuralNetworkLibrary
             Node<T> currentNode = startingNode;
             while(!currentNode.GameState.IsTerminal)
             {
-                currentNode.IsExpanded = true;
                 currentNode.GenerateChildren();
                 int randomIndex = random.Next(0, currentNode.Children.Length);
                 currentNode = currentNode.Children[randomIndex];
@@ -98,10 +95,10 @@ namespace NeuralNetworkLibrary
         {
             while (currentNode != null)
             {
-                value = -value;
                 currentNode.N++;
                 currentNode.W += value;
                 currentNode = currentNode.Parent;
+                value = -value;
             }
         }
 
@@ -116,12 +113,17 @@ namespace NeuralNetworkLibrary
             }
         }
 
-        public Node<T> GetBestMove(Node<T> currentNode)
+        public Node<T> GetBestMove(Node<T> currentNode, bool isPlayerTurn)
         {
             GenerateTree(currentNode, iterations);
 
-            var sortedChildren = currentNode.Children.OrderByDescending((state) => state.W);
+            var sortedChildren = currentNode.Children.OrderByDescending((state) => state.W/state.N);
             var topChild = sortedChildren.First();
+            if (isPlayerTurn)
+            {
+                topChild = sortedChildren.Last();
+            }
+
             return topChild;
         }
     }

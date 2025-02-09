@@ -31,7 +31,11 @@ namespace NeuralNetworkLibrary
 
         public double UCT(double c)
         {
-            return W / N + c * Math.Sqrt(Math.Log(Parent.N)/N);
+            if (N == 0)
+            {
+                return double.PositiveInfinity;    
+            }
+            return (W / N) + c * Math.Sqrt(Math.Log(Parent.N)/N);
         }
 
         public void GenerateChildren()
@@ -40,8 +44,17 @@ namespace NeuralNetworkLibrary
             Children = new Node<T>[gameStates.Length];
             for(int i = 0; i < gameStates.Length; i++)
             {
-                Children[i] = new Node<T>(GameState.GetChildren()[i], 0, 0, this);
+                Children[i] = new Node<T>(gameStates[i], 0, 0, this);
             }
+            IsExpanded = true;
+        }
+
+        public Node<T> Clone()
+        {
+            Node<T> clone = new Node<T>(GameState, W, N, Parent);
+            clone.IsExpanded = IsExpanded;
+            clone.Children = Children;
+            return clone;
         }
     }
 }
